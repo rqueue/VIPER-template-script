@@ -149,11 +149,11 @@ cat <<EOF > BR${uppercase}Wireframe.h
 #import <Foundation/Foundation.h>
 #import "BRModuleWireframeInterface.h"
 
-@class BRRootWireframe;
+@class BRApplicationWireframe;
 
 @interface BR${uppercase}Wireframe : NSObject <BRModuleWireframeInterface>
 
-@property (weak, nonatomic) BRRootWireframe *rootWireframe;
+@property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
 
 @end
 EOF
@@ -191,8 +191,13 @@ cat <<EOF > BR${uppercase}Wireframe.m
 }
 
 #pragma mark - BRModuleWireframeInterface
+
 - (UIViewController *)mainViewController {
     return self.navigationController;
+}
+
+- (UIViewController *)rawViewController {
+    return self.${lowercase}ViewController;
 }
 
 @end
@@ -236,9 +241,14 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(BR${uppercase}InteractorSpec)
 
 describe(@"BR${uppercase}Interactor", ^{
-    __block BR${uppercase}Interactor *${lowercase}Interactor;
+    __block BR${uppercase}Interactor *interactor;
 
     beforeEach(^{
+        interactor = [[BR${uppercase}Interactor alloc] init];
+    });
+
+    it(@"should not be nil", ^{
+        interactor should_not be_nil;
     });
 });
 
@@ -254,9 +264,14 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(BR${uppercase}DataManagerSpec)
 
 describe(@"BR${uppercase}DataManager", ^{
-    __block BR${uppercase}DataManager *${lowercase}DataManager;
+    __block BR${uppercase}DataManager *dataManager;
 
     beforeEach(^{
+        dataManager = [[BR${uppercase}DataManager alloc] init];
+    });
+
+    it(@"should not be nil", ^{
+        dataManager should_not be_nil;
     });
 });
 
@@ -273,9 +288,14 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(BR${uppercase}PresenterSpec)
 
 describe(@"BR${uppercase}Presenter", ^{
-    __block BR${uppercase}Presenter *${lowercase}Presenter;
+    __block BR${uppercase}Presenter *presenter;
 
     beforeEach(^{
+        presenter = [[BR${uppercase}Presenter alloc] init];
+    });
+
+    it(@"should not be nil", ^{
+        presenter should_not be_nil;
     });
 });
 
@@ -292,9 +312,14 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(BR${uppercase}WireframeSpec)
 
 describe(@"BR${uppercase}Wireframe", ^{
-    __block BR${uppercase}Wireframe *${lowercase}Wireframe;
+    __block BR${uppercase}Wireframe *wireframe;
 
     beforeEach(^{
+        wireframe = [[BR${uppercase}Wireframe alloc] init];
+    });
+
+    it(@"should not be nil", ^{
+        wireframe should_not be_nil;
     });
 });
 
