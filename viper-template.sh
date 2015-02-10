@@ -155,6 +155,8 @@ cat <<EOF > BR${uppercase}Wireframe.h
 
 @property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
 
+- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe;
+
 @end
 EOF
 
@@ -164,6 +166,7 @@ cat <<EOF > BR${uppercase}Wireframe.m
 #import "BR${uppercase}Presenter.h"
 #import "BR${uppercase}Interactor.h"
 #import "BR${uppercase}DataManager.h"
+#import "BRApplicationWireframe.h"
 
 @interface BR${uppercase}Wireframe ()
 
@@ -174,9 +177,10 @@ cat <<EOF > BR${uppercase}Wireframe.m
 
 @implementation BR${uppercase}Wireframe
 
-- (id)init {
+- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe {
     self = [super init];
     if (self) {
+        self.applicationWireframe = applicationWireframe;
         self.${lowercase}ViewController = [[BR${uppercase}ViewController alloc] init];
         self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.${lowercase}ViewController];
 
@@ -315,7 +319,8 @@ describe(@"BR${uppercase}Wireframe", ^{
     __block BR${uppercase}Wireframe *wireframe;
 
     beforeEach(^{
-        wireframe = [[BR${uppercase}Wireframe alloc] init];
+        wireframe = [[BR${uppercase}Wireframe alloc]
+        initWithApplicationWireframe:nil];
     });
 
     it(@"should not be nil", ^{
