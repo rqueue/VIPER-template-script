@@ -56,7 +56,8 @@ cat <<EOF > BR${uppercase}Presenter.h
 #import <Foundation/Foundation.h>
 #import "BR${uppercase}EventInterface.h"
 
-@protocol BR${uppercase}ViewInterface, BR${uppercase}InteractorInterface;
+@protocol BR${uppercase}ViewInterface;
+@protocol BR${uppercase}InteractorInterface;
 
 @interface BR${uppercase}Presenter : NSObject <BR${uppercase}EventInterface>
 
@@ -68,6 +69,8 @@ EOF
 
 cat <<EOF > BR${uppercase}Presenter.m
 #import "BR${uppercase}Presenter.h"
+#import "BR${uppercase}ViewInterface.h"
+#import "BR${uppercase}InteractorInterface.h"
 
 @implementation BR${uppercase}Presenter
 
@@ -78,10 +81,11 @@ EOF
 cat <<EOF > BR${uppercase}ViewController.h
 #import <UIKit/UIKit.h>
 #import "BR${uppercase}ViewInterface.h"
+#import "BRViewController.h"
 
 @protocol BR${uppercase}EventInterface;
 
-@interface BR${uppercase}ViewController : UIViewController <BR${uppercase}ViewInterface>
+@interface BR${uppercase}ViewController : BRViewController <BR${uppercase}ViewInterface>
 
 @property (nonatomic) id<BR${uppercase}EventInterface> eventHandler;
 
@@ -90,6 +94,7 @@ EOF
 
 cat <<EOF > BR${uppercase}ViewController.m
 #import "BR${uppercase}ViewController.h"
+#import "BR${uppercase}EventInterface.h"
 
 @implementation BR${uppercase}ViewController
 
@@ -148,10 +153,11 @@ EOF
 cat <<EOF > BR${uppercase}Wireframe.h
 #import <Foundation/Foundation.h>
 #import "BRModuleWireframeInterface.h"
+#import "BRWireframe.h"
 
 @class BRApplicationWireframe;
 
-@interface BR${uppercase}Wireframe : NSObject <BRModuleWireframeInterface>
+@interface BR${uppercase}Wireframe : BRWireframe <BRModuleWireframeInterface>
 
 @property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
 
