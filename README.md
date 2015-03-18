@@ -4,10 +4,12 @@ Run the script by giving it an argument of the module name you want in camel cas
 $ ./viper-template.sh myModuleName
 $ ./viper-template.sh MyModuleName
 ```
-Both of these commands will produce two folders:
+Both of these commands will produce the following folders/files:
 ```
 /MyModuleName
-/MyModuleNameSpecs
+  /MyModuleName      # main files in here
+  /Specs
+    /MyModuleName    # spec files in here
 ```
 The `MyModuleName` directory contains the actual VIPER temnplate files and the `MyModuleNameSpecs` directory contains blank Cedar spec files for all the module files less the view.
 
