@@ -152,12 +152,11 @@ EOF
 
 cat <<EOF > BR${uppercase}Wireframe.h
 #import <Foundation/Foundation.h>
-#import "BRModuleWireframeInterface.h"
 #import "BRWireframe.h"
 
 @class BRApplicationWireframe;
 
-@interface BR${uppercase}Wireframe : BRWireframe <BRModuleWireframeInterface>
+@interface BR${uppercase}Wireframe : BRWireframe
 
 @property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
 
@@ -207,7 +206,7 @@ cat <<EOF > BR${uppercase}Wireframe.m
     [self.baseViewController presentViewController:[self mainViewController] animated:SHOULD_ANIMATE completion:nil];
  }
 
-#pragma mark - BRModuleWireframeInterface
+#pragma mark - BRWireframe Overrides
 
 - (UIViewController *)mainViewController {
     return self.navigationController;
