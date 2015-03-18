@@ -7,6 +7,8 @@ lowercase=$(echo $(echo ${module:0:1} | tr '[:upper:]' '[:lower:]')$(echo ${modu
 
 mkdir ${uppercase}
 cd ${uppercase}
+mkdir ${uppercase}
+cd ${uppercase}
 
 cat <<EOF > BR${uppercase}Interactor.h
 #import <Foundation/Foundation.h>
@@ -244,8 +246,10 @@ cat <<EOF > BR${uppercase}DataManager.m
 EOF
 
 cd ..
-mkdir ${uppercase}Specs
-cd ${uppercase}Specs
+mkdir Specs
+cd Specs
+mkdir ${uppercase}
+cd ${uppercase}
 
 cat <<EOF > BR${uppercase}InteractorSpec.mm
 #import "BR${uppercase}Interactor.h"
