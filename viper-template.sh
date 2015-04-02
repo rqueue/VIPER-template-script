@@ -35,6 +35,11 @@ cat <<EOF > BR${uppercase}Interactor.m
 
 @implementation BR${uppercase}Interactor
 
+- (id)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (instancetype)initWithDataManager:(BR${uppercase}DataManager *)dataManager {
     self = [super init];
     if (self) {
@@ -76,6 +81,8 @@ cat <<EOF > BR${uppercase}Presenter.m
 
 @implementation BR${uppercase}Presenter
 
+#pragma mark - BR${uppercase}EventInterface
+
 @end
 
 EOF
@@ -99,14 +106,6 @@ cat <<EOF > BR${uppercase}ViewController.m
 #import "BR${uppercase}EventInterface.h"
 
 @implementation BR${uppercase}ViewController
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.title = @"${uppercase}";
-    }
-    return self;
-}
 
 @end
 EOF
@@ -186,6 +185,11 @@ cat <<EOF > BR${uppercase}Wireframe.m
 
 @implementation BR${uppercase}Wireframe
 
+- (id)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe {
     self = [super init];
     if (self) {
@@ -232,15 +236,39 @@ EOF
 cat <<EOF > BR${uppercase}DataManager.h
 #import <Foundation/Foundation.h>
 
+@class BRSession;
+
 @interface BR${uppercase}DataManager : NSObject
+
+- (instancetype)initWithSession:(BRSession *)session;
 
 @end
 EOF
 
 cat <<EOF > BR${uppercase}DataManager.m
 #import "BR${uppercase}DataManager.h"
+#import "BRSession.h"
+
+@interface BR${uppercase}DataManager()
+
+@property (nonatomic) BRSession *session;
+
+@end
 
 @implementation BR${uppercase}DataManager
+
+- (id)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (instancetype)initWithSession:(BRSession *)session {
+    self = [super init];
+    if (self) {
+        self.session = session;
+    }
+    return self;
+}
 
 @end
 EOF
@@ -254,6 +282,7 @@ cd ${uppercase}
 cat <<EOF > BR${uppercase}InteractorSpec.mm
 #import "BR${uppercase}Interactor.h"
 #import "BR${uppercase}DataManager.h"
+#import <KSDeferred/KSDeferred.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -262,9 +291,17 @@ SPEC_BEGIN(BR${uppercase}InteractorSpec)
 
 describe(@"BR${uppercase}Interactor", ^{
     __block BR${uppercase}Interactor *interactor;
+    __block BR${uppercase}DataManager *dataManager;
+    __block SpecHelper *helper;
+    __block KSDeferred *deferred;
 
     beforeEach(^{
-        interactor = [[BR${uppercase}Interactor alloc] init];
+        deferred = [KSDeferred defer];
+        helper = [SpecHelper specHelper];
+        helper.sharedExampleContext[@"deferred"] = deferred;
+
+        dataManager = [[BR${uppercase}DataManager alloc] initWithSession:nil];
+        interactor = [[BR${uppercase}Interactor alloc] initWithDataManager:dataManager];
     });
 
     it(@"should not be nil", ^{
@@ -277,6 +314,8 @@ EOF
 
 cat <<EOF > BR${uppercase}DataManagerSpec.mm
 #import "BR${uppercase}DataManager.h"
+#import <KSDeferred/KSDeferred.h>
+#import "BRSession.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -285,9 +324,17 @@ SPEC_BEGIN(BR${uppercase}DataManagerSpec)
 
 describe(@"BR${uppercase}DataManager", ^{
     __block BR${uppercase}DataManager *dataManager;
+    __block SpecHelper *helper;
+    __block KSDeferred *deferred;
+    __block BRSession *session;
 
     beforeEach(^{
-        dataManager = [[BR${uppercase}DataManager alloc] init];
+        deferred = [KSDeferred defer];
+        helper = [SpecHelper specHelper];
+        helper.sharedExampleContext[@"deferred"] = deferred;
+
+        session = nice_fake_for([BRSession class]);
+        dataManager = [[BR${uppercase}DataManager alloc] initWithSession:session];
     });
 
     it(@"should not be nil", ^{
@@ -301,6 +348,7 @@ EOF
 cat <<EOF > BR${uppercase}PresenterSpec.mm
 #import "BR${uppercase}Presenter.h"
 #import "BR${uppercase}Interactor.h"
+#import <KSDeferred/KSDeferred.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -309,8 +357,13 @@ SPEC_BEGIN(BR${uppercase}PresenterSpec)
 
 describe(@"BR${uppercase}Presenter", ^{
     __block BR${uppercase}Presenter *presenter;
+    __block SpecHelper *helper;
+    __block KSDeferred *deferred;
 
     beforeEach(^{
+        deferred = [KSDeferred defer];
+        helper = [SpecHelper specHelper];
+        helper.sharedExampleContext[@"deferred"] = deferred;
         presenter = [[BR${uppercase}Presenter alloc] init];
     });
 
@@ -335,8 +388,7 @@ describe(@"BR${uppercase}Wireframe", ^{
     __block BR${uppercase}Wireframe *wireframe;
 
     beforeEach(^{
-        wireframe = [[BR${uppercase}Wireframe alloc]
-        initWithApplicationWireframe:nil];
+        wireframe = [[BR${uppercase}Wireframe alloc] initWithApplicationWireframe:nil];
     });
 
     it(@"should not be nil", ^{
