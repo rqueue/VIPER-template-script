@@ -10,6 +10,12 @@ cd ${uppercase}
 mkdir ${uppercase}
 cd ${uppercase}
 
+mkdir Application\ Logic
+cd Application\ Logic
+
+mkdir Interactor
+cd Interactor
+
 cat <<EOF > BR${uppercase}Interactor.h
 #import <Foundation/Foundation.h>
 #import "BR${uppercase}InteractorInterface.h"
@@ -59,6 +65,66 @@ cat <<EOF > BR${uppercase}InteractorInterface.h
 @end
 EOF
 
+cd ..
+mkdir Manager
+cd Manager
+
+cat <<EOF > BR${uppercase}DataManager.h
+#import <Foundation/Foundation.h>
+
+@class BRSession;
+
+@interface BR${uppercase}DataManager : NSObject
+
+- (instancetype)initWithSession:(BRSession *)session;
+
+@end
+EOF
+
+cat <<EOF > BR${uppercase}DataManager.m
+#import "BR${uppercase}DataManager.h"
+#import "BRSession.h"
+
+@interface BR${uppercase}DataManager()
+
+@property (nonatomic) BRSession *session;
+
+@end
+
+@implementation BR${uppercase}DataManager
+
+- (id)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (instancetype)initWithSession:(BRSession *)session {
+    self = [super init];
+    if (self) {
+        self.session = session;
+    }
+    return self;
+}
+
+@end
+EOF
+
+cd ..
+cd ..
+mkdir User\ Interface
+cd User\ Interface
+
+mkdir Presenter
+cd Presenter
+
+cat <<EOF > BR${uppercase}EventInterface.h
+#import <Foundation/Foundation.h>
+
+@protocol BR${uppercase}EventInterface <NSObject>
+
+@end
+EOF
+
 cat <<EOF > BR${uppercase}Presenter.h
 #import <Foundation/Foundation.h>
 #import "BR${uppercase}EventInterface.h"
@@ -86,6 +152,10 @@ cat <<EOF > BR${uppercase}Presenter.m
 @end
 
 EOF
+
+cd ..
+mkdir View
+cd View
 
 cat <<EOF > BR${uppercase}ViewController.h
 #import <UIKit/UIKit.h>
@@ -150,6 +220,10 @@ cat <<EOF > BR${uppercase}ViewInterface.h
 
 @end
 EOF
+
+cd ..
+mkdir Wireframe
+cd Wireframe
 
 cat <<EOF > BR${uppercase}Wireframe.h
 #import <Foundation/Foundation.h>
@@ -225,59 +299,19 @@ cat <<EOF > BR${uppercase}Wireframe.m
 @end
 EOF
 
-cat <<EOF > BR${uppercase}EventInterface.h
-#import <Foundation/Foundation.h>
-
-@protocol BR${uppercase}EventInterface <NSObject>
-
-@end
-EOF
-
-cat <<EOF > BR${uppercase}DataManager.h
-#import <Foundation/Foundation.h>
-
-@class BRSession;
-
-@interface BR${uppercase}DataManager : NSObject
-
-- (instancetype)initWithSession:(BRSession *)session;
-
-@end
-EOF
-
-cat <<EOF > BR${uppercase}DataManager.m
-#import "BR${uppercase}DataManager.h"
-#import "BRSession.h"
-
-@interface BR${uppercase}DataManager()
-
-@property (nonatomic) BRSession *session;
-
-@end
-
-@implementation BR${uppercase}DataManager
-
-- (id)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (instancetype)initWithSession:(BRSession *)session {
-    self = [super init];
-    if (self) {
-        self.session = session;
-    }
-    return self;
-}
-
-@end
-EOF
-
+cd ..
+cd ..
 cd ..
 mkdir Specs
 cd Specs
 mkdir ${uppercase}
 cd ${uppercase}
+
+mkdir Application\ Logic
+cd Application\ Logic
+
+mkdir Interactor
+cd Interactor
 
 cat <<EOF > BR${uppercase}InteractorSpec.mm
 #import "BR${uppercase}Interactor.h"
@@ -312,6 +346,10 @@ describe(@"BR${uppercase}Interactor", ^{
 SPEC_END
 EOF
 
+cd ..
+mkdir Manager
+cd Manager
+
 cat <<EOF > BR${uppercase}DataManagerSpec.mm
 #import "BR${uppercase}DataManager.h"
 #import <KSDeferred/KSDeferred.h>
@@ -345,6 +383,14 @@ describe(@"BR${uppercase}DataManager", ^{
 SPEC_END
 EOF
 
+cd ..
+cd ..
+mkdir User\ Interface
+cd User\ Interface
+
+mkdir Presenter
+cd Presenter
+
 cat <<EOF > BR${uppercase}PresenterSpec.mm
 #import "BR${uppercase}Presenter.h"
 #import "BR${uppercase}Interactor.h"
@@ -374,6 +420,10 @@ describe(@"BR${uppercase}Presenter", ^{
 
 SPEC_END
 EOF
+
+cd ..
+mkdir Wireframe
+cd Wireframe
 
 cat <<EOF > BR${uppercase}WireframeSpec.mm
 #import "BR${uppercase}Wireframe.h"
