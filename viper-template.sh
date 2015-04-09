@@ -230,12 +230,13 @@ cat <<EOF > BR${uppercase}Wireframe.h
 #import "BRWireframe.h"
 
 @class BRApplicationWireframe;
+@class BRSession;
 
 @interface BR${uppercase}Wireframe : BRWireframe
 
 @property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
 
-- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe;
+- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe session:(BRSession *)session;
 - (void)routeOntoBaseViewController:(UIViewController *)viewController;
 
 @end
@@ -264,14 +265,14 @@ cat <<EOF > BR${uppercase}Wireframe.m
     return nil;
 }
 
-- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe {
+- (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe session:(BRSession *)session {
     self = [super init];
     if (self) {
         self.applicationWireframe = applicationWireframe;
         self.${lowercase}ViewController = [[BR${uppercase}ViewController alloc] init];
         self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.${lowercase}ViewController];
 
-        BR${uppercase}DataManager *dataManager = [[BR${uppercase}DataManager alloc] init];
+        BR${uppercase}DataManager *dataManager = [[BR${uppercase}DataManager alloc] initWithSession:session];
         BR${uppercase}Interactor *interactor = [[BR${uppercase}Interactor alloc] initWithDataManager:dataManager];
         BR${uppercase}Presenter *presenter = [[BR${uppercase}Presenter alloc] init];
         presenter.interactor = interactor;
@@ -438,7 +439,7 @@ describe(@"BR${uppercase}Wireframe", ^{
     __block BR${uppercase}Wireframe *wireframe;
 
     beforeEach(^{
-        wireframe = [[BR${uppercase}Wireframe alloc] initWithApplicationWireframe:nil];
+        wireframe = [[BR${uppercase}Wireframe alloc] initWithApplicationWireframe:nil session:nil];
     });
 
     it(@"should not be nil", ^{
