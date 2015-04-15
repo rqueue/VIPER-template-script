@@ -234,7 +234,7 @@ cat <<EOF > BR${uppercase}Wireframe.h
 
 @interface BR${uppercase}Wireframe : BRWireframe
 
-@property (weak, nonatomic) BRApplicationWireframe *applicationWireframe;
+@property (weak, nonatomic, readonly) BRApplicationWireframe *applicationWireframe;
 
 - (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe session:(BRSession *)session;
 - (void)routeOntoBaseViewController:(UIViewController *)viewController;
@@ -255,6 +255,7 @@ cat <<EOF > BR${uppercase}Wireframe.m
 @property (nonatomic) BR${uppercase}ViewController *${lowercase}ViewController;
 @property (nonatomic) UINavigationController *navigationController;
 @property (nonatomic) UIViewController *baseViewController;
+@property (weak, nonatomic, readwrite) BRApplicationWireframe *applicationWireframe;
 
 @end
 
