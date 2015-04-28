@@ -237,7 +237,6 @@ cat <<EOF > BR${uppercase}Wireframe.h
 @property (weak, nonatomic, readonly) BRApplicationWireframe *applicationWireframe;
 
 - (instancetype)initWithApplicationWireframe:(BRApplicationWireframe *)applicationWireframe session:(BRSession *)session;
-- (void)routeOntoBaseViewController:(UIViewController *)viewController;
 
 @end
 EOF
@@ -254,7 +253,6 @@ cat <<EOF > BR${uppercase}Wireframe.m
 
 @property (nonatomic) BR${uppercase}ViewController *${lowercase}ViewController;
 @property (nonatomic) UINavigationController *navigationController;
-@property (nonatomic) UIViewController *baseViewController;
 @property (weak, nonatomic, readwrite) BRApplicationWireframe *applicationWireframe;
 
 @end
@@ -282,11 +280,6 @@ cat <<EOF > BR${uppercase}Wireframe.m
     }
     return self;
 }
-
-- (void)routeOntoBaseViewController:(UIViewController *)viewController {
-    self.baseViewController = viewController;
-    [self.baseViewController presentViewController:[self mainViewController] animated:SHOULD_ANIMATE completion:nil];
- }
 
 #pragma mark - BRWireframe Overrides
 
