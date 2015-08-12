@@ -20,39 +20,19 @@ cat <<EOF > BR${uppercase}Interactor.h
 #import <Foundation/Foundation.h>
 #import "BR${uppercase}InteractorInterface.h"
 
-@class BR${uppercase}DataManager;
-
 @interface BR${uppercase}Interactor : NSObject <BR${uppercase}InteractorInterface>
-
-- (instancetype)initWithDataManager:(BR${uppercase}DataManager *)dataManager;
 
 @end
 EOF
 
 cat <<EOF > BR${uppercase}Interactor.m
 #import "BR${uppercase}Interactor.h"
-#import "BR${uppercase}DataManager.h"
 
 @interface BR${uppercase}Interactor ()
-
-@property (nonatomic) BR${uppercase}DataManager *dataManager;
 
 @end
 
 @implementation BR${uppercase}Interactor
-
-- (id)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (instancetype)initWithDataManager:(BR${uppercase}DataManager *)dataManager {
-    self = [super init];
-    if (self) {
-        self.dataManager = dataManager;
-    }
-    return self;
-}
 
 @end
 EOF
@@ -61,50 +41,6 @@ cat <<EOF > BR${uppercase}InteractorInterface.h
 #import <Foundation/Foundation.h>
 
 @protocol BR${uppercase}InteractorInterface <NSObject>
-
-@end
-EOF
-
-cd ..
-mkdir Manager
-cd Manager
-
-cat <<EOF > BR${uppercase}DataManager.h
-#import <Foundation/Foundation.h>
-
-@class BRSession;
-
-@interface BR${uppercase}DataManager : NSObject
-
-- (instancetype)initWithSession:(BRSession *)session;
-
-@end
-EOF
-
-cat <<EOF > BR${uppercase}DataManager.m
-#import "BR${uppercase}DataManager.h"
-#import "BRSession.h"
-
-@interface BR${uppercase}DataManager()
-
-@property (nonatomic) BRSession *session;
-
-@end
-
-@implementation BR${uppercase}DataManager
-
-- (id)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-- (instancetype)initWithSession:(BRSession *)session {
-    self = [super init];
-    if (self) {
-        self.session = session;
-    }
-    return self;
-}
 
 @end
 EOF
@@ -246,7 +182,6 @@ cat <<EOF > BR${uppercase}Wireframe.m
 #import "BR${uppercase}ViewController.h"
 #import "BR${uppercase}Presenter.h"
 #import "BR${uppercase}Interactor.h"
-#import "BR${uppercase}DataManager.h"
 #import "BRApplicationWireframe.h"
 
 @interface BR${uppercase}Wireframe ()
@@ -271,8 +206,7 @@ cat <<EOF > BR${uppercase}Wireframe.m
         self.${lowercase}ViewController = [[BR${uppercase}ViewController alloc] init];
         self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.${lowercase}ViewController];
 
-        BR${uppercase}DataManager *dataManager = [[BR${uppercase}DataManager alloc] initWithSession:session];
-        BR${uppercase}Interactor *interactor = [[BR${uppercase}Interactor alloc] initWithDataManager:dataManager];
+        BR${uppercase}Interactor *interactor = [[BR${uppercase}Interactor alloc] init];
         BR${uppercase}Presenter *presenter = [[BR${uppercase}Presenter alloc] init];
         presenter.interactor = interactor;
         presenter.userInterface = self.${lowercase}ViewController;
@@ -310,7 +244,6 @@ cd Interactor
 
 cat <<EOF > BR${uppercase}InteractorSpec.mm
 #import "BR${uppercase}Interactor.h"
-#import "BR${uppercase}DataManager.h"
 #import <KSDeferred/KSDeferred.h>
 
 using namespace Cedar::Matchers;
@@ -320,7 +253,6 @@ SPEC_BEGIN(BR${uppercase}InteractorSpec)
 
 describe(@"BR${uppercase}Interactor", ^{
     __block BR${uppercase}Interactor *interactor;
-    __block BR${uppercase}DataManager *dataManager;
     __block SpecHelper *helper;
     __block KSDeferred *deferred;
 
@@ -329,49 +261,11 @@ describe(@"BR${uppercase}Interactor", ^{
         helper = [SpecHelper specHelper];
         helper.sharedExampleContext[@"deferred"] = deferred;
 
-        dataManager = [[BR${uppercase}DataManager alloc] initWithSession:nil];
-        interactor = [[BR${uppercase}Interactor alloc] initWithDataManager:dataManager];
+        interactor = [[BR${uppercase}Interactor alloc] init];
     });
 
     it(@"should not be nil", ^{
         interactor should_not be_nil;
-    });
-});
-
-SPEC_END
-EOF
-
-cd ..
-mkdir Manager
-cd Manager
-
-cat <<EOF > BR${uppercase}DataManagerSpec.mm
-#import "BR${uppercase}DataManager.h"
-#import <KSDeferred/KSDeferred.h>
-#import "BRSession.h"
-
-using namespace Cedar::Matchers;
-using namespace Cedar::Doubles;
-
-SPEC_BEGIN(BR${uppercase}DataManagerSpec)
-
-describe(@"BR${uppercase}DataManager", ^{
-    __block BR${uppercase}DataManager *dataManager;
-    __block SpecHelper *helper;
-    __block KSDeferred *deferred;
-    __block BRSession *session;
-
-    beforeEach(^{
-        deferred = [KSDeferred defer];
-        helper = [SpecHelper specHelper];
-        helper.sharedExampleContext[@"deferred"] = deferred;
-
-        session = nice_fake_for([BRSession class]);
-        dataManager = [[BR${uppercase}DataManager alloc] initWithSession:session];
-    });
-
-    it(@"should not be nil", ^{
-        dataManager should_not be_nil;
     });
 });
 
